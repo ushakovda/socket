@@ -13,7 +13,7 @@ def parse_request(request):
 
 def generate_headers(method, url):
     if not method == "GET":
-        return ("HTTP/1.1 405 MEthod not allowed\n\n", 405)
+        return ("HTTP/1.1 405 Method not allowed\n\n", 405)
 
     if not url in URLS:
         return ("HTTP/1.1 404 Not found\n\n", 404)
@@ -21,10 +21,20 @@ def generate_headers(method, url):
     return ("HTTP/1.1 200 OK\n\n", 200)
 
 
+def generate_content(code, url):
+    if code == 404:
+        return '<h1>404</h1><p>Not found</p>'
+    if code == 405:
+        return '<h1>404</h1<p>Method not allowed</p>'
+    return '<h1>{}</h1>'.format(URLS[url])
+
+
 def generate_response(request):
     method, url = parse_request(request)
     headers, code = generate_headers(method, url)
-    return (headers + 'hello world').encode()
+    body = generate_content(code, url)
+
+    return (headers + body).encode()
 
 
 def run():
